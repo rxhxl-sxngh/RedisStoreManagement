@@ -262,7 +262,7 @@ public class ProductView extends JFrame {
     }
 
     public static void main(String[] args) {
-        // Sample user for debugging
+        // Sample user for quick debugging of this file without running whole application
         User currentUser = dataAccess.loadUser("rahul_2003","password");
         SwingUtilities.invokeLater(() -> {
             ProductView productView = new ProductView(currentUser); // Open Product View

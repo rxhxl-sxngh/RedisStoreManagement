@@ -142,7 +142,7 @@ public class OrderView extends JFrame {
 
     // Main method for testing
     public static void main(String[] args) {
-        // Sample user
+        // Sample user for quick debugging of this file without running whole application
         User currentUser = dataAccess.loadUser("rahul_2003","password");
 
         // Create and display the order view
