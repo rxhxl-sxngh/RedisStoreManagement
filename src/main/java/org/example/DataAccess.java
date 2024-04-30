@@ -17,7 +17,6 @@ public class DataAccess {
         jedis = new Jedis("redis://default:Pv7CaXwmwQRu46d3IlWuvTVggcSZVCvp@redis-19427.c16.us-east-1-3.ec2.redns.redis-cloud.com:19427");
     }
 
-    // Method to load user information from Redis based on userID
     // Method to load user information based on username and password
     public User loadUser(String username, String password) {
         // Construct the key for the user in Redis
@@ -225,6 +224,38 @@ public class DataAccess {
             System.out.println("Failed to delete order.");
         }
     }
+
+    // Method to search for products within a price range
+    public List<Product> searchForProductsByPrice(double minPrice, double maxPrice) {
+        List<Product> productsInRange = new ArrayList<>();
+        try {
+            // Retrieve all product keys from Redis
+            Set<String> keys = jedis.keys("product:*");
+
+            // Retrieve each product from Redis and check if it falls within the price range
+            for (String key : keys) {
+                Map<String, String> productData = jedis.hgetAll(key);
+                if (!productData.isEmpty()) {
+                    double price = Double.parseDouble(productData.get("price"));
+                    if (price >= minPrice && price <= maxPrice) {
+                        Product product = new Product(
+                                Integer.parseInt(key.split(":")[1]),
+                                productData.get("productName"),
+                                Integer.parseInt(productData.get("stock")),
+                                price,
+                                Integer.parseInt(productData.get("sellerID"))
+                        );
+                        productsInRange.add(product);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Failed to search for products by price.");
+        }
+        return productsInRange;
+    }
+
 
     // Close the Redis connection when done
     public void closeConnection() {

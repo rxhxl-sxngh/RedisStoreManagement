@@ -29,7 +29,7 @@ public class OrderView extends JFrame {
 
         setTitle("Order Product");
         setSize(800, 300);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
