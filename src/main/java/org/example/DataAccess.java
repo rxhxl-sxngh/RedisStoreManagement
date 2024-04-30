@@ -31,7 +31,7 @@ public class DataAccess {
             // Check if the provided password matches the stored password
             if (password.equals(userData.get("password"))) {
                 // Create and return a User object
-                return new User(userData.get("userID"), userData.get("email"), username, password);
+                return new User(Integer.parseInt(userData.get("userID")), userData.get("email"), username, password);
             } else {
                 System.out.println("Incorrect password.");
             }
@@ -151,6 +151,78 @@ public class DataAccess {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Failed to delete product.");
+        }
+    }
+
+    // Place an order in the database
+    public void placeOrder(Order order) {
+        try {
+            // Increment the order counter and get the new order ID
+            long orderID = jedis.incr("order_counter");
+
+            // Construct the key for the order in Redis
+            String orderKey = "order:" + orderID;
+
+            // Store order details in Redis hash
+            jedis.hset(orderKey, "productID", String.valueOf(order.getProductID()));
+            jedis.hset(orderKey, "buyerID", String.valueOf(order.getBuyerID()));
+            jedis.hset(orderKey, "sellerID", String.valueOf(order.getSellerID())); // Store sellerID
+            jedis.hset(orderKey, "orderPrice", String.valueOf(order.getOrderPrice()));
+            jedis.hset(orderKey, "creditCard", order.getCreditCard());
+            jedis.hset(orderKey, "cvv", order.getCvv());
+
+            // Decrement the stock of the product by 1
+            int productID = order.getProductID();
+            jedis.hincrBy("product:" + productID, "stock", -1);
+
+            // store the order ID in a list for easy retrieval
+            jedis.lpush("orders", String.valueOf(orderID));
+
+            System.out.println("Order placed successfully.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Failed to place order.");
+        }
+    }
+
+    // Method to get all orders
+    public List<Order> getAllOrders() {
+        List<Order> orders = new ArrayList<>();
+        try {
+            // Retrieve all order keys from Redis
+            Set<String> keys = jedis.keys("order:*");
+
+            // Retrieve each order from Redis and construct Order objects
+            for (String key : keys) {
+                Map<String, String> orderData = jedis.hgetAll(key);
+                if (!orderData.isEmpty()) {
+                    Order order = new Order(
+                            Integer.parseInt(orderData.get("productID")),
+                            Integer.parseInt(orderData.get("buyerID")),
+                            Integer.parseInt(orderData.get("sellerID")),
+                            Double.parseDouble(orderData.get("orderPrice")),
+                            orderData.get("creditCard"),
+                            orderData.get("cvv")
+                    );
+                    orders.add(order);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Failed to get all orders.");
+        }
+        return orders;
+    }
+
+    // Method to delete an order by orderID
+    public void deleteOrder(long orderID) {
+        try {
+            // Delete the order hash from Redis
+            jedis.del("order:" + orderID);
+            System.out.println("Order deleted successfully.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Failed to delete order.");
         }
     }
 

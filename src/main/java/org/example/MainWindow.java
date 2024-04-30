@@ -11,7 +11,7 @@ public class MainWindow extends JFrame {
 
     public MainWindow(User newUser) {
         activeUser = newUser;
-        setTitle("Main Window");
+        setTitle("Main Window - " + activeUser.getUsername());
         setSize(1000, 500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -30,14 +30,14 @@ public class MainWindow extends JFrame {
             }
         });
 
-        JButton openEmployeeViewButton = new JButton("Buy Products");
-//        openEmployeeViewButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                EmployeeView employeeView = new EmployeeView(); // Open Employee View
-//                employeeView.setVisible(true);
-//            }
-//        });
+        JButton openOrderViewButton = new JButton("Buy Products");
+        openOrderViewButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                OrderView orderView = new OrderView(activeUser); // Open Employee View
+                orderView.setVisible(true);
+            }
+        });
 
         JButton openProjectViewButton = new JButton("Search Products");
 //        openProjectViewButton.addActionListener(new ActionListener() {
@@ -53,15 +53,30 @@ public class MainWindow extends JFrame {
 //            }
 //        });
 
+        // Logout button
+        JButton logoutButton = new JButton("Logout");
+        logoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Logging out...");
+                // Hide the current window
+                setVisible(false);
+                // Open a new login screen
+                LoginScreen loginScreen = new LoginScreen();
+                loginScreen.setVisible(true);
+            }
+        });
+
         // Panel to hold the title and buttons
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout()); // Use BorderLayout for positioning
         panel.add(titleLabel, BorderLayout.NORTH); // Add the title label at the top
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER)); // Panel to hold buttons
         buttonPanel.add(openProductViewButton);
-        buttonPanel.add(openEmployeeViewButton);
+        buttonPanel.add(openOrderViewButton);
         buttonPanel.add(openProjectViewButton);
         panel.add(buttonPanel, BorderLayout.CENTER); // Add the buttons below the title
+        panel.add(logoutButton, BorderLayout.SOUTH); // Add the logout button at the bottom
 
         add(panel);
     }

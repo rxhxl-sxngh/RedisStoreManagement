@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 
 public class OrderView extends JFrame {
@@ -18,7 +20,7 @@ public class OrderView extends JFrame {
     private JButton buyButton;
 
     private final User currentUser;
-    private final List<Product> products;
+    private List<Product> products;
     static DataAccess dataAccess = new DataAccess();
 
     public OrderView(User currentUser) {
@@ -28,6 +30,12 @@ public class OrderView extends JFrame {
         setTitle("Order Product");
         setSize(800, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                dataAccess.closeConnection(); // Call closeConnection when window is closed
+            }
+        });
         setLocationRelativeTo(null);
 
         initComponents();
@@ -46,7 +54,7 @@ public class OrderView extends JFrame {
         sellerIDField = new JTextField();
         creditCardField = new JTextField();
         cvvField = new JTextField();
-        buyButton = new JButton("Buy");
+        buyButton = new JButton("Purchase Item");
 
         // Set text fields as uneditable
         productNameField.setEditable(false);
@@ -106,6 +114,7 @@ public class OrderView extends JFrame {
                                 selectedProduct.getPrice(), creditCard, cvv);
                         // Call method to save order to the database
                         saveOrder(order);
+                        refreshView();
                     }
                 }
             }
@@ -115,9 +124,20 @@ public class OrderView extends JFrame {
     // Method to save the order to the database (not implemented)
     private void saveOrder(Order order) {
         // Implement database saving logic here
-        // dataAccess.placeOrder(order);
+        dataAccess.placeOrder(order);
         System.out.println("Order saved: " + order);
         JOptionPane.showMessageDialog(OrderView.this, "Order placed successfully.");
+    }
+
+    // Refresh the view
+    private void refreshView() {
+        // Reload product data and update the combo box
+        productComboBox.removeAllItems();
+        List<Product> updatedProducts = dataAccess.getAllProducts();
+        products = updatedProducts;
+        for (Product product : updatedProducts) {
+            productComboBox.addItem(product);
+        }
     }
 
     // Main method for testing

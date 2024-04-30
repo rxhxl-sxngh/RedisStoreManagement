@@ -118,7 +118,7 @@ public class ProductView extends JFrame {
 
         JLabel sellerIDLabel = new JLabel("Seller ID:");
         sellerIDField = new JTextField();
-        sellerIDField.setText(currentUser.getUserID());
+        sellerIDField.setText(String.valueOf(currentUser.getUserID()));
         sellerIDField.setEditable(false);
         panel.add(sellerIDLabel);
         panel.add(sellerIDField);
@@ -176,7 +176,7 @@ public class ProductView extends JFrame {
 
         JLabel sellerIDLabel = new JLabel("Seller ID:");
         sellerIDField = new JTextField();
-        sellerIDField.setText(currentUser.getUserID());
+        sellerIDField.setText(String.valueOf(currentUser.getUserID()));
         sellerIDField.setEditable(false);
         panel.add(sellerIDLabel);
         panel.add(sellerIDField);
@@ -233,7 +233,7 @@ public class ProductView extends JFrame {
             // Remove product
             int productID = Integer.parseInt(productIDField.getText());
             Product product = dataAccess.getProductByID(productID);
-            product.setSellerID(Integer.parseInt(currentUser.getUserID()));
+            product.setSellerID(Integer.parseInt(String.valueOf(currentUser.getUserID())));
             dataAccess.deleteProduct(product);
             // Show operation selection view
             showOperationSelectionView();

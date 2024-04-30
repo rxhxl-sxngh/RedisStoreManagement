@@ -41,7 +41,7 @@ public class LoginScreen extends JFrame {
                 // If user exists, hide the login window and proceed to next screen
                 System.out.println("Logging in with username = " + username + " and password = " + password);
                 this.setVisible(false);
-                dataAccess.closeConnection();
+                // dataAccess.closeConnection();
                 EventQueue.invokeLater(() -> {
                     MainWindow application = new MainWindow(user);
                     application.setVisible(true);

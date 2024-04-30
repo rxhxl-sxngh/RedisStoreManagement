@@ -8,9 +8,9 @@ public class Order {
     private String creditCard;
     private String cvv;
 
-    public Order(int productID, String buyerID, int sellerID, double orderPrice, String creditCard, String cvv) {
+    public Order(int productID, int buyerID, int sellerID, double orderPrice, String creditCard, String cvv) {
         this.productID = productID;
-        this.buyerID = Integer.parseInt(buyerID);
+        this.buyerID = buyerID;
         this.sellerID = sellerID;
         this.orderPrice = orderPrice;
         this.creditCard = creditCard;
@@ -77,5 +77,6 @@ public class Order {
                 ", cvv='" + cvv + '\'' +
                 '}';
     }
+
 }
 

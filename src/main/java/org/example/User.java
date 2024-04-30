@@ -1,12 +1,12 @@
 package org.example;
 
 public class User {
-    private String userID;
+    private int userID;
     private String email;
     private String username;
     private String password;
 
-    public User(String userID, String email, String username, String password) {
+    public User(int userID, String email, String username, String password) {
         this.userID = userID;
         this.email = email;
         this.username = username;
@@ -14,11 +14,11 @@ public class User {
     }
 
     // Getters and setters for the fields
-    public String getUserID() {
+    public int getUserID() {
         return userID;
     }
 
-    public void setUserID(String userID) {
+    public void setUserID(int userID) {
         this.userID = userID;
     }
 
