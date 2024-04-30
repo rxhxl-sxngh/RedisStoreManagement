@@ -175,7 +175,7 @@ public class DataAccess {
             jedis.hincrBy("product:" + productID, "stock", -1);
 
             // store the order ID in a list for easy retrieval
-            jedis.lpush("orders", String.valueOf(orderID));
+            // jedis.lpush("orders", String.valueOf(orderID));
 
             System.out.println("Order placed successfully.");
         } catch (Exception e) {
