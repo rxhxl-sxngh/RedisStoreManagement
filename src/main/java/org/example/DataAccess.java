@@ -53,6 +53,7 @@ public class DataAccess {
                 return; // Exit the method without adding the product
             }
             // Store each product property as a field in a Redis hash
+            jedis.hset("product:" + product.getProductID(), "productID", String.valueOf(product.getProductID()));
             jedis.hset("product:" + product.getProductID(), "productName", product.getProductName());
             jedis.hset("product:" + product.getProductID(), "stock", String.valueOf(product.getStock()));
             jedis.hset("product:" + product.getProductID(), "price", String.valueOf(product.getPrice()));
@@ -163,6 +164,7 @@ public class DataAccess {
             String orderKey = "order:" + orderID;
 
             // Store order details in Redis hash
+            jedis.hset(orderKey, "orderID", String.valueOf(orderID));
             jedis.hset(orderKey, "productID", String.valueOf(order.getProductID()));
             jedis.hset(orderKey, "buyerID", String.valueOf(order.getBuyerID()));
             jedis.hset(orderKey, "sellerID", String.valueOf(order.getSellerID())); // Store sellerID
